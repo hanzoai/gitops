@@ -14,7 +14,7 @@ const LogViewer = ({ logs, className }: { logs: string[]; className?: string }) 
 
 	return (
 		<StickToBottomContainer
-			className={cn('log-viewer bg-gray-900 text-gray-100 p-4 overflow-auto text-xs', className)}
+			className={cn('log-viewer bg-gray-900 text-gray-100 overflow-auto text-xs', className)}
 		>
 			<StickToBottomContent>
 				<div dangerouslySetInnerHTML={{ __html: htmlLogs }} className='whitespace-pre' />
