@@ -1,0 +1,46 @@
+apiVersion: skaffold/v2beta14
+kind: Config
+build:
+   artifacts:
+      - image:  cloudagnost/platform
+        context: ../platform
+        sync:
+           infer:
+              - '**/*.js'
+              - '**/*.json'
+              - '**/*.yaml'
+        docker:
+           dockerfile: Dockerfile.dev
+      - image: cloudagnost/sync
+        context: ../sync
+        sync:
+           infer:
+              - '**/*.js'
+              - '**/*.json'
+        docker:
+           dockerfile: Dockerfile.dev
+      - image: cloudagnost/monitor
+        context: ../monitor
+        sync:
+          infer:
+              - '**/*.js'
+              - '**/*.json'
+        docker:
+          dockerfile: Dockerfile.dev
+      - image: cloudagnost/webhook
+        context: ../webhook
+        sync:
+          infer:
+              - '**/*.go'
+        docker:
+          dockerfile: Dockerfile.dev
+deploy:
+   statusCheckDeadlineSeconds: 300
+   kubectl:
+      defaultNamespace: agnost
+      manifests:
+         - platform.yaml
+         - monitor.yaml
+         - sync.yaml
+         - webhook.yaml
+

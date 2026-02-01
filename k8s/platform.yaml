@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform
+  namespace: agnost
+  labels:
+    app: platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: platform
+  template:
+    metadata:
+      labels:
+        app: platform
+    spec:
+      serviceAccountName: provisioner-sa
+      containers:
+        - name: platform
+          image:  cloudagnost/platform:v4
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4000
+          env:
+            - name: CACHE_HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: redis
+                  key: hostname
+            - name: CACHE_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: redis
+                  key: password
+            - name: CLUSTER_DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb
+                  key: databaseURI
+            - name: CLUSTER_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb
+                  key: username
+            - name: CLUSTER_DB_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb
+                  key: password
+            - name: PASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: agnost
+                  key: passPhrase
+            - name: CLUSTER_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: agnost
+                  key: clusterAccessToken
+            - name: MASTER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: agnost
+                  key: masterToken
+            - name: CLUSTER_SLUG
+              valueFrom:
+                secretKeyRef:
+                  name: agnost
+                  key: clusterSlug
+            - name: GROUP_NAME
+              value: "hanzo.ai"
+            - name: SOLVER_NAME
+              value: "hanzo"
+            - name: OAUTH_URL
+              value: ""
+            - name: STORAGE_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: storage
+                  key: endpoint
+            - name: STORAGE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: storage
+                  key: port
+            - name: STORAGE_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: storage
+                  key: accessKey
+            - name: STORAGE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: storage
+                  key: secretKey
+            - name: WEBHOOK_NAMESPACE
+              value: agnost
+            - name: WEBHOOK_SERVICE
+              value: "agnost-webhook"
+            - name: NGINX_NAMESPACE
+              value: "ingress-nginx"
+            - name: CERT_MANAGER_NAMESPACE
+              value: "cert-manager"
+            - name: NAMESPACE
+              value: agnost
+            - name: RELEASE_NUMBER
+              value: "v0.0.2"
+    
+
+

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: sync
+   namespace: agnost
+   labels:
+      app: sync
+spec:
+   replicas: 1
+   selector:
+      matchLabels:
+         app: sync
+   template:
+      metadata:
+         labels:
+            app: sync
+      spec:
+         containers:
+            - name: sync
+              image:  cloudagnost/sync:v4
+              # We will be using the minikube docker daemon, since the actual docker daemon on local machine are different
+              # Prevent minikube docker daemon to pull images from central docker hub set imagePullPolicy to Never, so that
+              imagePullPolicy: Never
+              ports:
+                 - containerPort: 4000
+              env:
+                 - name: CACHE_HOSTNAME
+                   valueFrom:
+                      secretKeyRef:
+                         name: redis
+                         key: hostname 
+                 - name: CACHE_PWD
+                   valueFrom:
+                      secretKeyRef:
+                         name: redis
+                         key: password
+                 - name: NAMESPACE
+                   value: agnost
+                 - name: RELEASE_NUMBER
+                   value: "v0.0.2"

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: monitor
+   namespace: agnost
+   labels:
+      app: monitor
+spec:
+   replicas: 1
+   selector:
+      matchLabels:
+         app: monitor
+   template:
+      metadata:
+         labels:
+            app: monitor
+      spec:
+         serviceAccountName: provisioner-sa
+         containers:
+            - name: monitor
+              image: cloudagnost/monitor:v4
+              # We will be using the minikube docker daemon, since the actual docker daemon on local machine are different
+              # Prevent minikube docker daemon to pull images from central docker hub set imagePullPolicy to Never, so that
+              imagePullPolicy: Never
+              ports:
+                 - containerPort: 4000
+              env:
+                 - name: CLUSTER_DB_URI
+                   valueFrom:
+                      secretKeyRef:
+                         name: mongodb
+                         key: databaseURI
+                 - name: CLUSTER_DB_USER
+                   valueFrom:
+                      secretKeyRef:
+                         name: mongodb
+                         key: username
+                 - name: CLUSTER_DB_PWD
+                   valueFrom:
+                      secretKeyRef:
+                         name: mongodb
+                         key: password
+                 - name: PASSPHRASE
+                   valueFrom:
+                      secretKeyRef:
+                         name: agnost
+                         key: passPhrase
+                 - name: MASTER_TOKEN
+                   valueFrom:
+                      secretKeyRef:
+                         name: agnost
+                         key: masterToken
+                 - name: NAMESPACE
+                   value: agnost
+                 - name: RELEASE_NUMBER
+                   value: "v0.0.2"
