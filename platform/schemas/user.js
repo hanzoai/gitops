@@ -55,7 +55,7 @@ export const UserModel = mongoose.model(
 				default: false,
 			},
 			provider: {
-				// Type of the login profile such as agnost, github, bitbucket, gitlab etc. The provider name should be all lowercase letters.
+				// Type of the login profile such as hanzo, github, bitbucket, gitlab etc. The provider name should be all lowercase letters.
 				type: String,
 				required: true,
 				index: true,
@@ -342,7 +342,7 @@ export const applyRules = (type) => {
 
 						if (!userObj) {
 							throw new Error(
-								`The user identified with id '${value}' is not a member the Agnost Cluster. Cluster ownership can only be transferred to an existing cluster member in 'Active' status.`
+								`The user identified with id '${value}' is not a member the Hanzo Cluster. Cluster ownership can only be transferred to an existing cluster member in 'Active' status.`
 							);
 						}
 

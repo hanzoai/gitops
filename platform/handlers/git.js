@@ -174,7 +174,7 @@ export async function revokeGitProviderAccessToken(
 	refreshToken
 ) {
 	try {
-		const oauthUrl = process.env.OAUTH_URL || 'https://api.agnost.dev/oauth';
+		const oauthUrl = process.env.OAUTH_URL || 'https://api.hanzo.ai/oauth';
 		await axios.post(`${oauthUrl}/${provider}/revoke`, {
 			accessToken,
 			refreshToken,

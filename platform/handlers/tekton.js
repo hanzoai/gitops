@@ -579,7 +579,7 @@ async function deleteGitlabWebhook(gitPat, projectId, hookId) {
 async function createBitbucketWebhook(gitPat, repoName, webhookUrl, secretToken) {
   try {
     const webhookPayload = {
-      description: 'Agnost Webhok',
+      description: 'Hanzo Webhook',
       url: webhookUrl,
       active: true,
       secret: secretToken,
