@@ -63,7 +63,9 @@ jobs:
       - name: Rollout restart
         run: |
           for component in platform studio monitor sync webhook; do
-            kubectl -n hanzo set image deployment/gitops-${component} \
+            kubectl -n hanzo set image deployment/${component} \
               ${component}=${{ env.IMAGE_PREFIX }}-${component}:${{ github.sha }} \
-              --record 2>/dev/null || echo "deployment gitops-${component} not found, skipping"
+              2>/dev/null || echo "deployment ${component} not found, skipping"
+            kubectl -n hanzo rollout restart deployment/${component} \
+              2>/dev/null || true
           done

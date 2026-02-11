@@ -18,7 +18,7 @@ hanzo-webhook:
     repository: "hanzoai/gitops-webhook"
     tag: "latest"
 
-# Hanzo Platform images (GHCR)
+# Hanzo Platform images (Docker Hub)
 platform:
   image: "hanzoai/gitops-platform"
   tag: "latest"
