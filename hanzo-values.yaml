@@ -1,0 +1,71 @@
+# Hanzo Platform GitOps - Custom Values
+#
+# Disable ingress-nginx (already installed)
+ingress-nginx:
+  enabled: false
+
+# Disable cert-manager (already installed)
+cert-manager:
+  enabled: false
+
+# Use existing ingress-nginx namespace
+hanzo-webhook:
+  fullnameOverride: "hanzo-webhook"
+  certManager:
+    namespace: cert-manager
+    serviceAccountName: cert-manager
+  image:
+    repository: "ghcr.io/hanzoai/gitops-webhook"
+    tag: "latest"
+
+# Hanzo Platform images (GHCR)
+platform:
+  image: "ghcr.io/hanzoai/gitops-platform"
+  tag: "latest"
+  extraEnv:
+    - name: OAUTH_URL
+      value: "https://hanzo.id/api/oauth"
+    - name: GROUP_NAME
+      value: "hanzo.ai"
+    - name: SOLVER_NAME
+      value: "hanzo"
+
+sync:
+  image: "ghcr.io/hanzoai/gitops-sync"
+  tag: "latest"
+
+monitor:
+  image: "ghcr.io/hanzoai/gitops-monitor"
+  tag: "latest"
+
+studio:
+  image: "ghcr.io/hanzoai/gitops-studio"
+  tag: "latest"
+  extraEnv:
+    - name: VITE_DOCS_URL
+      value: "https://docs.hanzo.ai/platform"
+    - name: VITE_CHANGELOG_URL
+      value: "https://github.com/hanzoai/platform/releases"
+    - name: VITE_ACME_DOMAIN
+      value: "hanzo.ai"
+
+# MongoDB settings
+mongodb:
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+# Redis settings
+redis:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+# MinIO settings
+minio:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
