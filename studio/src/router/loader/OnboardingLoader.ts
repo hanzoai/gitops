@@ -1,10 +1,14 @@
-async function onboardingLoader() {
-  // const status = await useClusterStore.getState().checkClusterSetup();
-  // const isAuthenticated = useAuthStore.getState().isAuthenticated();
+import useAuthStore from "@/store/auth/authStore";
+import useClusterStore from "@/store/cluster/clusterStore";
+import { redirect } from "react-router-dom";
 
-  // // if (status) {
-  // //   return redirect(isAuthenticated ? "/organization" : "/login");
-  // // }
+async function onboardingLoader() {
+  const status = await useClusterStore.getState().checkClusterSetup();
+  const isAuthenticated = useAuthStore.getState().isAuthenticated();
+
+  if (status) {
+    return redirect(isAuthenticated ? "/organization" : "/login");
+  }
 
   return null;
 }
