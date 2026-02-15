@@ -4,7 +4,7 @@ First off, thank you for considering contributing to Hanzo. It's people like you
 
 ### Code of Conduct
 
-This project and everyone participating is governed by the [Hanzo Code of Conduct](https://github.com/hanzoai/gitops/blob/main/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to support@hanzo.ai.
+This project and everyone participating is governed by the [Hanzo Code of Conduct](https://github.com/hanzoai/paas/blob/main/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to support@hanzo.ai.
 
 ### How Can I Contribute?
 
@@ -28,4 +28,4 @@ Bugs are tracked as GitHub issues. Create an issue and provide the following inf
 
 #### Contributing to the Codebase
 
-If you want to become a contributor of Hanzo, submit your pull requests and fill in the [required template](https://github.com/hanzoai/gitops/blob/main/PR_TEMPLATE.md). Please keep a consistent style for code, code comments, and commit messages.  All submissions will be reviewed as quickly as possible.
+If you want to become a contributor of Hanzo, submit your pull requests and fill in the [required template](https://github.com/hanzoai/paas/blob/main/PR_TEMPLATE.md). Please keep a consistent style for code, code comments, and commit messages.  All submissions will be reviewed as quickly as possible.

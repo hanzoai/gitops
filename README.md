@@ -1,9 +1,9 @@
-# Hanzo GitOps
+# Hanzo PaaS
 
-Hanzo GitOps is an open source GitOps platform running on Kubernetes clusters. It provides a **complete CD solution for building, deploying, and managing applications in a Kubernetes cluster**. In short, you connect your GitHub, GitLab or Bitbucket repository and Hanzo takes care of building and deploying your app to your Kubernetes cluster when you push new code.
+Hanzo PaaS is an open source platform-as-a-service running on Kubernetes clusters. It provides a **complete CD solution for building, deploying, and managing applications in a Kubernetes cluster**. In short, you connect your GitHub, GitLab or Bitbucket repository and Hanzo takes care of building and deploying your app to your Kubernetes cluster when you push new code.
 
 <p align="center">
-<img width="960" height="245" src="https://github.com/hanzoai/gitops/blob/main/hanzo.svg" alt="Hanzo logo"></img>
+<img width="960" height="245" src="https://github.com/hanzoai/paas/blob/main/hanzo.svg" alt="Hanzo logo"></img>
 </p>
 
 > For how to install, set up and use Hanzo please refer to its [documentation](https://hanzo.ai/getting-started).
@@ -35,12 +35,12 @@ Please note that all setup, build and deploy operations are performed within you
 
 ## Installing and Setting up Hanzo
 
-For how to install, set up and use Hanzo please refer to its [documentation](https://hanzo.ai). Alternatively, you can also have a look to [Hanzo Helm chart](https://github.com/hanzoai/gitops-charts).
+For how to install, set up and use Hanzo please refer to its [documentation](https://hanzo.ai). Alternatively, you can also have a look to [Hanzo Helm chart](https://github.com/hanzoai/paas-charts).
 
 In short, you need to have an up and running Kubernetes cluster with at least 4CPUs and 8GB of memory and install the Hanzo Helm Chart to this cluster.
 
 ## Want to Contribute
 
-See [CONTRIBUTING.md](https://github.com/hanzoai/gitops/blob/main/CONTRIBUTING.md) for an overview of our processes.
+See [CONTRIBUTING.md](https://github.com/hanzoai/paas/blob/main/CONTRIBUTING.md) for an overview of our processes.
 
 If you are looking for support, enter an issue or join our [Join our Discord channel](https://discord.gg/5NhssWVm).

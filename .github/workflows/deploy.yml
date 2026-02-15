@@ -18,19 +18,19 @@ jobs:
       matrix:
         include:
           - dir: platform
-            image: hanzoai/platform-api
+            image: hanzoai/paas-api
             deploy: platform
           - dir: studio
-            image: hanzoai/platform-studio
+            image: hanzoai/paas-studio
             deploy: studio
           - dir: monitor
-            image: hanzoai/platform-monitor
+            image: hanzoai/paas-monitor
             deploy: monitor
           - dir: sync
-            image: hanzoai/platform-sync
+            image: hanzoai/paas-sync
             deploy: sync
           - dir: webhook
-            image: hanzoai/platform-webhook
+            image: hanzoai/paas-webhook
             deploy: webhook
     steps:
       - name: Checkout repository
@@ -54,7 +54,7 @@ jobs:
           : "${KMS_CLIENT_SECRET:?KMS_CLIENT_SECRET is required}"
 
           KMS_URL="${KMS_URL:-https://kms.hanzo.ai}"
-          KMS_PROJECT_SLUG="${KMS_PROJECT_SLUG:-gitops}"
+          KMS_PROJECT_SLUG="${KMS_PROJECT_SLUG:-paas}"
           KMS_ENV_SLUG="${KMS_ENV_SLUG:-production}"
           KMS_SECRET_PATH="${KMS_SECRET_PATH:-/ci}"
 
@@ -135,7 +135,7 @@ jobs:
           : "${KMS_CLIENT_SECRET:?KMS_CLIENT_SECRET is required}"
 
           KMS_URL="${KMS_URL:-https://kms.hanzo.ai}"
-          KMS_PROJECT_SLUG="${KMS_PROJECT_SLUG:-gitops}"
+          KMS_PROJECT_SLUG="${KMS_PROJECT_SLUG:-paas}"
           KMS_ENV_SLUG="${KMS_ENV_SLUG:-production}"
           KMS_SECRET_PATH="${KMS_SECRET_PATH:-/ci}"
 
@@ -178,11 +178,11 @@ jobs:
       - name: Update deployments
         run: |
           declare -A IMAGES=(
-            [platform]=hanzoai/platform-api
-            [studio]=hanzoai/platform-studio
-            [monitor]=hanzoai/platform-monitor
-            [sync]=hanzoai/platform-sync
-            [webhook]=hanzoai/platform-webhook
+            [platform]=hanzoai/paas-api
+            [studio]=hanzoai/paas-studio
+            [monitor]=hanzoai/paas-monitor
+            [sync]=hanzoai/paas-sync
+            [webhook]=hanzoai/paas-webhook
           )
           for deploy in "${!IMAGES[@]}"; do
             image="${IMAGES[$deploy]}"

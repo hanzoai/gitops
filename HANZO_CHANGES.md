@@ -1,4 +1,4 @@
-# Hanzo Platform GitOps - Changes from Agnost
+# Hanzo PaaS - Changes from Agnost
 
 ## Overview
 This is a fork of Agnost GitOps with all hardcoded `api.agnost.dev` references removed and made configurable via environment variables.
@@ -38,19 +38,19 @@ This is a fork of Agnost GitOps with all hardcoded `api.agnost.dev` references r
 ### Build Images
 ```bash
 # Studio
-cd studio && docker build -t ghcr.io/hanzoai/platform-studio:latest .
+cd studio && docker build -t hanzoai/paas-studio:latest .
 
 # Platform
-cd platform && docker build -t ghcr.io/hanzoai/platform-api:latest .
+cd platform && docker build -t hanzoai/paas-api:latest .
 
 # Monitor
-cd monitor && docker build -t ghcr.io/hanzoai/platform-monitor:latest .
+cd monitor && docker build -t hanzoai/paas-monitor:latest .
 
 # Sync
-cd sync && docker build -t ghcr.io/hanzoai/platform-sync:latest .
+cd sync && docker build -t hanzoai/paas-sync:latest .
 
 # Webhook
-cd webhook && docker build -t ghcr.io/hanzoai/platform-webhook:latest .
+cd webhook && docker build -t hanzoai/paas-webhook:latest .
 ```
 
 ### Configure for Hanzo

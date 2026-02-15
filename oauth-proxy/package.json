@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/oauth-proxy",
   "version": "1.0.0",
-  "description": "OAuth proxy for Hanzo GitOps platform (GitHub, GitLab, Bitbucket)",
+  "description": "OAuth proxy for Hanzo PaaS platform (GitHub, GitLab, Bitbucket)",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

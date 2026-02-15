@@ -33,7 +33,7 @@ export const clusterContainers = [
 		],
 		repoOrRegistry: "registry",
 		registry: {
-			imageUrl: "europe-docker.pkg.dev/agnost-gitops/images/platform:latest",
+			imageUrl: "hanzoai/paas/platform:latest",
 		},
 		networking: {
 			containerPort: 4000,
@@ -135,7 +135,7 @@ export const clusterContainers = [
 		],
 		repoOrRegistry: "registry",
 		registry: {
-			imageUrl: "europe-docker.pkg.dev/agnost-gitops/images/webhook:latest",
+			imageUrl: "hanzoai/paas/webhook:latest",
 		},
 		networking: {
 			containerPort: 443,
@@ -236,7 +236,7 @@ export const clusterContainers = [
 		],
 		repoOrRegistry: "registry",
 		registry: {
-			imageUrl: "europe-docker.pkg.dev/agnost-gitops/images/sync:latest",
+			imageUrl: "hanzoai/paas/sync:latest",
 		},
 		networking: {
 			containerPort: 4000,
@@ -337,7 +337,7 @@ export const clusterContainers = [
 		],
 		repoOrRegistry: "registry",
 		registry: {
-			imageUrl: "europe-docker.pkg.dev/agnost-gitops/images/studio:latest",
+			imageUrl: "hanzoai/paas/studio:latest",
 		},
 		networking: {
 			containerPort: 4000,
@@ -443,7 +443,7 @@ export const clusterContainers = [
 		],
 		repoOrRegistry: "registry",
 		registry: {
-			imageUrl: "europe-docker.pkg.dev/agnost-gitops/images/monitor:latest",
+			imageUrl: "hanzoai/paas/monitor:latest",
 		},
 		networking: {
 			containerPort: 4000,

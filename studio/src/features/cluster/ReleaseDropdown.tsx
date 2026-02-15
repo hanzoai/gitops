@@ -163,7 +163,7 @@ function ReleaseSettings() {
 			<DropdownMenuItem>
 				<Link
 					className='flex items-center'
-					to={`https://github.com/cloud-agnost/agnost-gitops/releases/tag/${clusterReleaseInfo?.latest?.release}`}
+					to={`https://github.com/hanzoai/paas/releases/tag/${clusterReleaseInfo?.latest?.release}`}
 					rel='noopener noreferrer'
 					target='_blank'
 				>

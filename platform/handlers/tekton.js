@@ -759,7 +759,7 @@ export async function triggerTektonPipeline(container, environment, gitProvider)
     taskrunParams[10].value = dockerfile.replace(/^\/+/, ''); // remove leading slash, if exists
     taskrunParams[11].value = generatedCommitId;
     taskrunParams[12].value = gitRepoUrl;
-    taskrunParams[13].value = 'agnost-gitops';
+    taskrunParams[13].value = 'hanzo-paas';
     taskrunParams[14].value = gitRepoUrl + '/commit/' + generatedCommitId;
     taskrunParams[15].value = gitRepoUrl;
     taskrunParams[16].value = path.split('/')[2];
