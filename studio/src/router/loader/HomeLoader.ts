@@ -11,7 +11,9 @@ const REDIRECT_URLS = {
 function homeLoader() {
   if (useAuthStore.getState().isAuthenticated()) {
     return redirect("/organization");
-  } else return redirect("/login");
+  }
+  // Show landing page for unauthenticated users
+  return null;
 }
 
 function redirectHandleLoader(params: LoaderFunctionArgs) {

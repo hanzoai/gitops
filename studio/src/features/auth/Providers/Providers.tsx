@@ -5,12 +5,12 @@ import { useSearchParams } from 'react-router-dom';
 
 // OAuth flows go through hanzo.id as a unified gateway
 const IAM_ORIGIN = import.meta.env.VITE_IAM_ORIGIN || 'https://hanzo.id';
-const IAM_CLIENT_ID = import.meta.env.VITE_IAM_CLIENT_ID || 'hanzo-app-client-id';
+const IAM_CLIENT_ID = import.meta.env.VITE_IAM_CLIENT_ID || 'hanzo-platform-client-id';
 const IAM_SCOPE = import.meta.env.VITE_IAM_SCOPE || 'openid profile email';
 
-// Comma-separated list of enabled providers. Default: hanzo only.
-// Set VITE_AUTH_PROVIDERS=hanzo,github,gitlab,bitbucket to enable all.
-const ENABLED_PROVIDERS = (import.meta.env.VITE_AUTH_PROVIDERS || 'hanzo')
+// Comma-separated list of enabled providers.
+// Default: hanzo + github. All providers go through hanzo.id gateway.
+const ENABLED_PROVIDERS = (import.meta.env.VITE_AUTH_PROVIDERS || 'hanzo,github')
 	.split(',')
 	.map((p: string) => p.trim());
 
