@@ -106,6 +106,38 @@ export default function OrganizationCluster() {
 		);
 	}
 
+	// Cluster is provisioning - show progress
+	if (hasCluster && orgDoks?.status === 'provisioning' && !status) {
+		return (
+			<div className='space-y-6 p-6'>
+				<div>
+					<h2 className='text-2xl font-semibold text-default'>Kubernetes Cluster</h2>
+					<p className='text-subtle mt-1'>
+						Your cluster is being provisioned. This usually takes 4-8 minutes.
+					</p>
+				</div>
+				<div className='rounded-lg border border-border bg-base-800 p-6 space-y-4'>
+					<div className='flex items-center gap-3'>
+						<div className='animate-spin h-5 w-5 border-2 border-brand-primary border-t-transparent rounded-full' />
+						<div>
+							<h3 className='font-semibold text-default'>Provisioning {orgDoks.clusterName}</h3>
+							<p className='text-xs text-subtle mt-1'>Region: {orgDoks.region} &middot; Endpoint will be available shortly</p>
+						</div>
+					</div>
+					{orgDoks.endpoint && (
+						<div className='text-sm'>
+							<span className='text-subtle'>Endpoint:</span>
+							<span className='ml-2 text-default font-mono text-xs'>{orgDoks.endpoint}</span>
+						</div>
+					)}
+					<Button variant='secondary' size='sm' onClick={loadStatus}>
+						Check Status
+					</Button>
+				</div>
+			</div>
+		);
+	}
+
 	// No cluster yet - show provisioning UI
 	if (!hasCluster && !status) {
 		return (
