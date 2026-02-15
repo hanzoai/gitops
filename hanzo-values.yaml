@@ -33,6 +33,12 @@ platform:
       value: "hanzo.ai"
     - name: SOLVER_NAME
       value: "hanzo"
+    - name: DO_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: platform-secrets
+          key: DO_API_TOKEN
+          optional: true
 
 sync:
   image: "hanzoai/paas-sync"
