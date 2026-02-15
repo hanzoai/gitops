@@ -43,7 +43,7 @@ monitor:
   tag: "latest"
 
 studio:
-  image: "hanzoai/paas-studio"
+  image: "hanzoai/paas-ui"
   tag: "latest"
   extraEnv:
     - name: VITE_IAM_ORIGIN

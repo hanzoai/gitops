@@ -22,7 +22,7 @@ jobs:
             image: paas-api
             deploy: platform
           - dir: studio
-            image: paas-studio
+            image: paas-ui
             deploy: studio
           - dir: monitor
             image: paas-monitor
@@ -79,7 +79,7 @@ jobs:
         run: |
           declare -A IMAGES=(
             [platform]=paas-api
-            [studio]=paas-studio
+            [studio]=paas-ui
             [monitor]=paas-monitor
             [sync]=paas-sync
             [webhook]=paas-webhook

@@ -38,7 +38,7 @@ This is a fork of Agnost GitOps with all hardcoded `api.agnost.dev` references r
 ### Build Images
 ```bash
 # Studio
-cd studio && docker build -t hanzoai/paas-studio:latest .
+cd studio && docker build -t hanzoai/paas-ui:latest .
 
 # Platform
 cd platform && docker build -t hanzoai/paas-api:latest .
