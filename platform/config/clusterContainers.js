@@ -326,9 +326,9 @@ export const clusterContainers = [
 		},
 	},
 	{
-		iid: "studio",
-		name: "studio",
-		slug: "studio",
+		iid: "platform-ui",
+		name: "platform-ui",
+		slug: "platform-ui",
 		type: "deployment",
 		pipelineStatus: "Disconnected",
 		variables: [
@@ -337,14 +337,14 @@ export const clusterContainers = [
 		],
 		repoOrRegistry: "registry",
 		registry: {
-			imageUrl: "hanzoai/paas/studio:latest",
+			imageUrl: "hanzoai/paas/platform-ui:latest",
 		},
 		networking: {
 			containerPort: 4000,
 			ingress: {
 				enabled: true,
 				type: "path",
-				path: "studio",
+				path: "platform-ui",
 			},
 			customDomain: {
 				enabled: false,

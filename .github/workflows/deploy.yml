@@ -21,7 +21,7 @@ jobs:
           - dir: platform
             image: paas-api
             deploy: platform
-          - dir: studio
+          - dir: platform-ui
             image: paas-ui
             deploy: studio
           - dir: monitor

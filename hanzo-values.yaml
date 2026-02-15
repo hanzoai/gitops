@@ -42,14 +42,14 @@ monitor:
   image: "hanzoai/paas-monitor"
   tag: "latest"
 
-studio:
+platform-ui:
   image: "hanzoai/paas-ui"
   tag: "latest"
   extraEnv:
     - name: VITE_IAM_ORIGIN
       value: "https://hanzo.id"
     - name: VITE_IAM_CLIENT_ID
-      value: "hanzo-app-client-id"
+      value: "hanzo-platform-client-id"
     - name: VITE_IAM_SCOPE
       value: "openid profile email"
     - name: VITE_DOCS_URL
