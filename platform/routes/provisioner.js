@@ -22,6 +22,34 @@ import ERROR_CODES from "../config/errorCodes.js";
 const router = express.Router({ mergeParams: true });
 
 /*
+@route      /v1/cluster/doks/fleet
+@method     GET
+@desc       Returns DOKS cluster info for all orgs the user can access
+@access     private
+*/
+router.get("/fleet", authSession, async (req, res) => {
+	try {
+		// Get all orgs that have a DOKS cluster
+		const orgs = await orgCtrl.getManyByQuery({ "doks.clusterId": { $exists: true, $ne: null } });
+		const fleet = orgs.map((org) => ({
+			orgId: org._id,
+			orgName: org.name,
+			clusterId: org.doks.clusterId,
+			clusterName: org.doks.clusterName,
+			region: org.doks.region,
+			status: org.doks.status,
+			ha: org.doks.ha || false,
+			endpoint: org.doks.endpoint,
+			nodePools: org.doks.nodePools || [],
+			createdAt: org.doks.createdAt,
+		}));
+		res.json(fleet);
+	} catch (error) {
+		helper.handleError(req, res, error);
+	}
+});
+
+/*
 @route      /v1/cluster/doks/options
 @method     GET
 @desc       Returns available DOKS regions and node sizes

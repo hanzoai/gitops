@@ -93,6 +93,10 @@ export default class ClusterService {
 
   static doksUrl = "/v1/cluster/doks";
 
+  static async getDOKSFleet() {
+    return (await axios.get(`${this.doksUrl}/fleet`)).data;
+  }
+
   static async getDOKSOptions() {
     return (await axios.get(`${this.doksUrl}/options`)).data;
   }
