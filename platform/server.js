@@ -12,6 +12,7 @@ import { createRateLimiter } from "./middlewares/rateLimiter.js";
 import { handleUndefinedPaths } from "./middlewares/undefinedPaths.js";
 import { logRequest } from "./middlewares/logRequest.js";
 import { initializeSyncClient, disconnectSyncClient } from "./init/sync.js";
+import { initializeZapServer, disconnectZapServer } from "./init/zap.js";
 
 (function () {
 	console.info(`Process ${process.pid} is running`);
@@ -25,6 +26,8 @@ import { initializeSyncClient, disconnectSyncClient } from "./init/sync.js";
 	const server = initExpress();
 	// Connect to synchronization server
 	initializeSyncClient();
+	// Start ZAP server for MCP-compatible tool access
+	initializeZapServer();
 
 	// Gracefull handle process exist
 	handleProcessExit(server);
@@ -113,6 +116,8 @@ async function initExpress() {
 function handleProcessExit(server) {
 	//Gracefully exit if we force quit through cntr+C
 	process.on("SIGINT", () => {
+		// Close ZAP server
+		disconnectZapServer();
 		// Close synchronization server connection
 		disconnectSyncClient();
 		// Close connection to the database
