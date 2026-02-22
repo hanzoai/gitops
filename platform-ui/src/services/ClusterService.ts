@@ -97,6 +97,10 @@ export default class ClusterService {
     return (await axios.get(`${this.doksUrl}/fleet`)).data;
   }
 
+  static async syncDOKSFleet() {
+    return (await axios.post(`${this.doksUrl}/sync`)).data;
+  }
+
   static async getDOKSOptions() {
     return (await axios.get(`${this.doksUrl}/options`)).data;
   }

@@ -93,6 +93,10 @@ async function initExpress() {
 		(await import("./routes/container.js")).default
 	);
 
+	// DOKS provisioning and billing
+	app.use("/v1/cluster/doks", (await import("./routes/provisioner.js")).default);
+	app.use("/v1/billing", (await import("./routes/billing.js")).default);
+
 	// Middleware to handle undefined paths or posts
 	app.use(handleUndefinedPaths);
 

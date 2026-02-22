@@ -156,6 +156,16 @@ export async function upgradeToHA(clusterId) {
 }
 
 /**
+ * List all DOKS clusters from DO API.
+ */
+export async function listDOKSClusters() {
+	const res = await axios.get(`${DO_API}/kubernetes/clusters`, {
+		headers: doHeaders(),
+	});
+	return res.data.kubernetes_clusters || [];
+}
+
+/**
  * List available node sizes with pricing info.
  */
 export async function listNodeSizes() {

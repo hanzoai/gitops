@@ -2,8 +2,9 @@ import axios from "axios";
 import orgCtrl from "../controllers/organization.js";
 import { getDropletPricing, getDOKSCluster } from "./provisioner.js";
 
-const HA_MONTHLY_COST = 40; // $40/mo for HA control plane
-const MARKUP_PERCENT = parseFloat(process.env.HANZO_PLATFORM_MARKUP_PERCENT || "0");
+const DOKS_BASE_COST = 12; // $12/mo base DOKS control plane
+const HA_MONTHLY_COST = 40; // $40/mo additional for HA control plane
+const MARKUP_PERCENT = parseFloat(process.env.PAAS_MARKUP_PERCENT || "0");
 
 // Cache pricing lookups for 1 hour
 const priceCache = new Map();
@@ -46,7 +47,13 @@ export async function calculateOrgCost(org) {
 		}
 	}
 
-	// HA control plane cost
+	// DOKS control plane base cost
+	items.push({
+		type: "control_plane",
+		monthlyTotal: DOKS_BASE_COST,
+	});
+
+	// HA control plane surcharge
 	if (org.doks.ha) {
 		items.push({
 			type: "ha_control_plane",

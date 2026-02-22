@@ -8,7 +8,7 @@ import ClusterService from '@/services/ClusterService';
 import useAuthStore from '@/store/auth/authStore';
 import useOrganizationStore from '@/store/organization/organizationStore';
 import { Organization } from '@/types';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -53,6 +53,16 @@ export default function OrganizationSelect() {
 
 	const navigate = useNavigate();
 	const { t } = useTranslation();
+	const queryClient = useQueryClient();
+
+	const syncMutation = useMutation({
+		mutationFn: () => ClusterService.syncDOKSFleet(),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['doks-fleet'] });
+			queryClient.invalidateQueries({ queryKey: ['fleet-billing'] });
+			queryClient.invalidateQueries({ queryKey: ['organizations'] });
+		},
+	});
 
 	function handleClickOrganization(org: Organization) {
 		selectOrganization(org);
@@ -116,7 +126,19 @@ export default function OrganizationSelect() {
 						{/* Fleet Overview */}
 						{fleet && (fleet as FleetCluster[]).length > 0 && (
 							<div className='mb-8 w-full max-w-3xl mx-auto'>
-								<h2 className='text-lg font-semibold text-default mb-3'>Fleet Overview</h2>
+								<div className='flex items-center justify-between mb-3'>
+									<h2 className='text-lg font-semibold text-default'>Fleet Overview</h2>
+									{user?.isClusterOwner && (
+										<Button
+											variant='secondary'
+											size='sm'
+											onClick={() => syncMutation.mutate()}
+											loading={syncMutation.isPending}
+										>
+											Sync from DO
+										</Button>
+									)}
+								</div>
 								<div className='grid grid-cols-4 gap-4 mb-4'>
 									<div className='rounded-lg border border-border bg-base-800 p-4 text-center'>
 										<p className='text-2xl font-bold text-default'>{(fleet as FleetCluster[]).length}</p>

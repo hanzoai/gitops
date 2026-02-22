@@ -15,12 +15,90 @@ import {
 	upgradeToHA,
 	listNodeSizes,
 	listRegions,
+	listDOKSClusters,
 	getDropletPricing,
 } from "../handlers/provisioner.js";
 import ERROR_CODES from "../config/errorCodes.js";
 import { recordUsageEvent, calculateOrgCost } from "../handlers/billing.js";
 
 const router = express.Router({ mergeParams: true });
+
+/*
+@route      /v1/cluster/doks/sync
+@method     POST
+@desc       Syncs all DOKS cluster data from DO API into org records.
+            Matches clusters to orgs by name convention ({orgName}-k8s).
+            Creates missing orgs if needed. Updates node pools, status, pricing.
+@access     private (cluster owner only)
+*/
+router.post("/sync", authSession, async (req, res) => {
+	try {
+		if (!req.user.isClusterOwner) {
+			return res.status(403).json({
+				error: "Forbidden",
+				details: "Only cluster owner can sync fleet data",
+				code: ERROR_CODES.unauthorized,
+			});
+		}
+
+		const clusters = await listDOKSClusters();
+		const results = [];
+
+		for (const cluster of clusters) {
+			// Derive org name from cluster name: "hanzo-k8s" -> "Hanzo", "lux-k8s" -> "Lux"
+			const slug = cluster.name.replace(/-k8s$/, "");
+			const orgName = slug.charAt(0).toUpperCase() + slug.slice(1);
+
+			// Find or create org
+			let org = await orgCtrl.getOneByQuery({ name: { $regex: new RegExp(`^${orgName}$`, "i") } });
+			if (!org) {
+				const orgId = helper.generateId();
+				org = await orgCtrl.create({
+					_id: orgId,
+					ownerUserId: req.user._id,
+					iid: helper.generateSlug("org"),
+					name: orgName,
+					color: helper.generateColor("light"),
+					createdBy: req.user._id,
+					isClusterEntity: false,
+				});
+			}
+
+			// Update org with live cluster data
+			const updated = await orgCtrl.updateOneById(org._id, {
+				"doks.clusterId": cluster.id,
+				"doks.clusterName": cluster.name,
+				"doks.region": cluster.region_slug || cluster.region,
+				"doks.status": cluster.status?.state === "running" ? "running" : (cluster.status?.state || "unknown"),
+				"doks.endpoint": cluster.endpoint,
+				"doks.ha": cluster.ha || false,
+				"doks.nodePools": (cluster.node_pools || []).map((p) => ({
+					poolId: p.id,
+					name: p.name,
+					size: p.size,
+					count: p.count,
+					autoScale: p.auto_scale,
+				})),
+			});
+
+			results.push({
+				orgId: org._id,
+				orgName: org.name,
+				clusterName: cluster.name,
+				status: cluster.status?.state,
+				nodePools: (cluster.node_pools || []).map((p) => ({
+					name: p.name,
+					size: p.size,
+					count: p.count,
+				})),
+			});
+		}
+
+		res.json({ synced: results.length, clusters: results });
+	} catch (error) {
+		helper.handleError(req, res, error);
+	}
+});
 
 /*
 @route      /v1/cluster/doks/fleet
