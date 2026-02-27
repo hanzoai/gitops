@@ -105,8 +105,70 @@ All secrets are managed via kms.hanzo.ai (Infisical fork):
 - Tailwind CSS with custom design tokens (text-default, text-subtle, bg-base-800, etc.)
 - White-label ready: no hardcoded branding, use env vars for brand/colors/logo
 
+## PaaS v2 Job Workers (packages/jobs/)
+
+### Queue Architecture
+- BullMQ (to be replaced with @hanzo/mq) connected to Valkey via KV_URL env var
+- Four queues defined in `queues.ts`: build, deploy, provision, monitor
+- Connection parsed from KV_URL (redis-compatible)
+
+### Workers
+- **build** (`workers/build.ts`): Full build->push->deploy pipeline. Resolves cluster type from DB, delegates to orchestrator.triggerBuild(), polls until terminal, then updateContainer() with the new image. Status lifecycle: queued->building->pushing->deploying->running/failed. Logs streamed to deployment.buildLogs.
+- **deploy** (`workers/deploy.ts`): Standalone create/update container. Constructs ContainerSpec from DB record, calls orchestrator.createContainer() or updateContainer(). Updates container.pipelineStatus.
+- **monitor** (`workers/monitor.ts`): Repeatable every 30s via upsertJobScheduler. Polls getContainerStatus() for all active containers grouped by cluster. Caches orchestrator instances. Writes status JSONB to containers table.
+
+### Entry Point
+`startWorkers()` in `index.ts` creates all three workers and registers the monitor schedule. Returns `{ close() }` for graceful shutdown.
+
+## MongoDB -> PostgreSQL Migration (scripts/migrate-mongo-to-pg.ts)
+
+### Prerequisites
+`pnpm add -w mongodb @paralleldrive/cuid2 postgres`
+
+### Design
+- Standalone tsx script, no Mongoose dependency (uses raw mongodb driver)
+- Maps ObjectId -> cuid2 via in-memory idMap (preserves referential integrity)
+- Migrates 14 entity types in dependency order: users, organizations, org_members, projects, project_members, environments, clusters, registries, git_providers, containers, deployments, domains, audit_logs, invitations
+- Embedded arrays extracted: project.team -> project_members, org/project invitations -> unified invitations table
+- Container sub-docs (networking, podConfig, probes, etc.) transformed and normalized (e.g., cpu cores->millicores, memory gibibyte->mebibyte)
+- Registry provider-specific fields (ecr, acr, gcp, generic) merged into single credentials JSONB
+- Wrapped in a single PG transaction with rollback on error
+- --dry-run flag skips all PG writes
+- Progress bars per table
+
+## ZeroTrust Tunnel Infrastructure (hanzo-zt namespace on hanzo-k8s)
+
+### Components
+- **hanzo-zt-controller**: OpenZiti controller at `zt-api.hanzo.ai:443` (edge mgmt API, ctrl on port 1280)
+- **hanzo-zt-router**: OpenZiti edge router (port 3022)
+- **hanzo-zt-console**: ZiTi admin console at `ztc.hanzo.ai`
+- **zrok-controller**: zrok v2 overlay at `zrok.hanzo.ai` (port 18080, admin secret: `zrok-hanzo-admin-7f3a9c2e1b4d`)
+- **hanzo-zt-mcp-gateway**: MCP tool gateway over ZT mesh (uses zrok enable token `vHeXX2fewUw7`)
+- Custom `zrok2` binary: `ghcr.io/hanzoai/zrok:latest` (linux/amd64 only, runs as `zrok2`)
+
+### Tunnel Scripts (scripts/)
+- `zt-tunnel.sh dev`: Port-forwards hanzo-k8s ZT services locally
+- `zt-tunnel.sh expose`: Creates cloudflared quick-tunnel for local PaaS
+- `zt-tunnel.sh full`: Both port-forward and cloudflared
+
+### E2E Testing (scripts/)
+- `seed.ts`: Inserts test user, org, project, env, session into PostgreSQL
+- `e2e-test.sh`: Full E2E test suite (infra check, compose up, db push, seed, build, start, API tests, cluster registration, container deployment on k3d + Docker Swarm, cleanup)
+- `test-orchestrators.ts`: Low-level orchestrator adapter tests (k3d + Docker Swarm)
+
+## Build Notes
+- `lib/trpc.tsx` (renamed from .ts) contains JSX, must have .tsx extension
+- `next.config.ts` needs `outputFileTracingRoot` for pnpm workspace, and `asset/resource` rule for `.node` binaries
+- `DATABASE_URL` must be set for build (Next.js evaluates auth routes at build time)
+- `serverExternalPackages` includes: @kubernetes/client-node, dockerode, docker-modem, ssh2, cpu-features, @octokit/core
+- `@paas/db` depends on `@paas/shared` (workspace dep for shared types)
+- `@paas/api` depends on `@paralleldrive/cuid2` (direct dep for container ID generation)
+
 ## Known Issues
 - K8s deployment name still "studio" (intentionally kept to avoid disruption)
 - DO cluster limit is 5 per account (request increase via DO support ticket)
 - ghcr.io/hanzoai/kms-operator package is private (needs visibility change via GitHub UI)
 - KMS operator CRD API group is `secrets.lux.network` (Lux white-label of Hanzo KMS)
+- zrok2 binary is linux/amd64 only; on macOS ARM use cloudflared quick-tunnel instead
+- DockerOrchestrator: `TaskSpec.ContainerSpec` needs `as any` cast (dockerode union type)
+- K8s Log API: 4th param is Writable stream, not options object (use PassThrough + options in 5th param)

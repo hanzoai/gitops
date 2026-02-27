@@ -97,6 +97,9 @@ async function initExpress() {
 	app.use("/v1/cluster/doks", (await import("./routes/provisioner.js")).default);
 	app.use("/v1/billing", (await import("./routes/billing.js")).default);
 
+	// Public pricing API (no auth required — serves real DO pricing with markup)
+	app.use("/v1/pricing", (await import("./routes/pricing.js")).default);
+
 	// Middleware to handle undefined paths or posts
 	app.use(handleUndefinedPaths);
 
