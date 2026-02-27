@@ -64,6 +64,22 @@ platform-ui:
       value: "https://github.com/hanzoai/platform/releases"
     - name: VITE_ACME_DOMAIN
       value: "hanzo.ai"
+    - name: DO_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: platform-secrets
+          key: DO_API_TOKEN
+          optional: true
+    - name: PAAS_MARKUP_PERCENT
+      value: "20"
+    - name: LLM_GATEWAY_URL
+      value: "http://llm.hanzo.svc.cluster.local:4000"
+    - name: LLM_API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: platform-secrets
+          key: LLM_API_KEY
+          optional: true
 
 # MongoDB settings
 mongodb:

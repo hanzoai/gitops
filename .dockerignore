@@ -1,0 +1,48 @@
+# Dependencies (installed fresh in Docker)
+node_modules
+**/node_modules
+
+# Build artifacts
+.next
+**/.next
+dist
+**/dist
+.turbo
+**/.turbo
+
+# Development / local state
+.env
+.env.*
+!.env.example
+*.local
+
+# Version control
+.git
+.gitignore
+
+# Docker (prevent recursive context)
+Dockerfile
+docker-compose*.yml
+compose*.yml
+.dockerignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docs and non-runtime files
+*.md
+LICENSE
+CHANGELOG*
+
+# Legacy code (not needed in v2 image)
+platform/
+platform-ui/
+monitor/
+sync/

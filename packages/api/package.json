@@ -1,0 +1,26 @@
+{
+  "name": "@paas/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./root": "./src/root.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src/"
+  },
+  "dependencies": {
+    "@paas/db": "workspace:*",
+    "@paas/orchestrator": "workspace:*",
+    "@paas/shared": "workspace:*",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@trpc/server": "^11.0.0",
+    "drizzle-orm": "^0.41.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

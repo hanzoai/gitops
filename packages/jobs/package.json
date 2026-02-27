@@ -1,0 +1,23 @@
+{
+  "name": "@paas/jobs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src/"
+  },
+  "dependencies": {
+    "@hanzo/mq": "npm:bullmq@^5.34.0",
+    "drizzle-orm": "^0.41.0",
+    "@paas/db": "workspace:*",
+    "@paas/orchestrator": "workspace:*",
+    "@paas/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
