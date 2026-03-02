@@ -47,7 +47,7 @@ const AI_MODELS = [
     inputPricePer1M: 2.00,
     outputPricePer1M: 6.00,
     available: true,
-    description: 'Frontier-class Mixture of Distilled Experts',
+    description: 'Frontier-class Mixture of Diverse Experts',
   },
   // Third-party via LLM Gateway
   {
