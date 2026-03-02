@@ -11,7 +11,8 @@
     "./k8s/provisioner": "./src/k8s/provisioner.ts",
     "./docker": "./src/docker/adapter.ts",
     "./cloudflare": "./src/cloudflare/adapter.ts",
-    "./github-pages": "./src/github-pages/adapter.ts"
+    "./github-pages": "./src/github-pages/adapter.ts",
+    "./github/app": "./src/github/app.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -19,6 +20,7 @@
   },
   "dependencies": {
     "@kubernetes/client-node": "^1.0.0",
+    "@octokit/auth-app": "^7.1.5",
     "@octokit/core": "^7.0.6",
     "@paas/shared": "workspace:*",
     "dockerode": "^4.0.4",

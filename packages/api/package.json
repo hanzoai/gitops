@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@paas/db": "workspace:*",
+    "@paas/jobs": "workspace:*",
     "@paas/orchestrator": "workspace:*",
     "@paas/shared": "workspace:*",
     "@paralleldrive/cuid2": "^2.2.2",

@@ -14,6 +14,8 @@
     "@hanzo/ui": "^5.3.34",
     "@paas/api": "workspace:*",
     "@paas/db": "workspace:*",
+    "@paas/jobs": "workspace:*",
+    "@paas/orchestrator": "workspace:*",
     "@paas/shared": "workspace:*",
     "@tanstack/react-query": "^5.64.0",
     "@trpc/client": "^11.0.0",

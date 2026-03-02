@@ -19,3 +19,9 @@ export const provisionQueue = new Queue('provision', { connection })
 
 // Monitor queue: periodic health checks
 export const monitorQueue = new Queue('monitor', { connection })
+
+// Webhook queue: process GitHub/GitLab webhook events
+export const webhookQueue = new Queue('webhook', { connection })
+
+// Sync queue: full repository sync from provider API
+export const syncQueue = new Queue('sync', { connection })

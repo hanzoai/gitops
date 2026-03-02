@@ -36,6 +36,7 @@ export const containers = pgTable('containers', {
 
   // Source
   sourceType:      sourceTypeEnum('source_type').notNull().default('repo'),
+  repositoryId:    text('repository_id'),
   repoConfig:      jsonb('repo_config').$type<RepoConfig | null>(),
   registryConfig:  jsonb('registry_config').$type<RegistryConfig | null>(),
 

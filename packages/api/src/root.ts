@@ -16,6 +16,8 @@ import { provisionerRouter } from './routers/provisioner'
 import { auditRouter } from './routers/audit'
 import { invitationRouter } from './routers/invitation'
 import { vmRouter } from './routers/vm'
+import { installationRouter } from './routers/installation'
+import { repositoryRouter } from './routers/repository'
 
 export const appRouter = router({
   cluster: clusterRouter,
@@ -35,6 +37,8 @@ export const appRouter = router({
   audit: auditRouter,
   invitation: invitationRouter,
   vm: vmRouter,
+  installation: installationRouter,
+  repository: repositoryRouter,
 })
 
 export type AppRouter = typeof appRouter
