@@ -1,20 +1,23 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useState, useEffect, useCallback } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import {
   Boxes,
   Brain,
   Building2,
-  ChevronLeft,
+  Check,
   ChevronRight,
   ChevronsUpDown,
   CreditCard,
+  GitBranch,
+  Globe,
   LogOut,
   Menu,
   Monitor,
+  Network,
   Package,
   PanelLeftClose,
   PanelLeftOpen,
@@ -40,13 +43,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@hanzo/ui/primitives'
+import { trpc } from '@/lib/trpc'
+
+const LS_KEY = 'paas-selected-org'
 
 const navItems = [
   { href: '/orgs', label: 'Organizations', icon: Building2 },
+  { href: '/repos', label: 'Repositories', icon: GitBranch },
   { href: '/clusters', label: 'Fleet', icon: Server },
   { href: '/vms', label: 'Virtual Machines', icon: Monitor },
   { href: '/models', label: 'AI Models', icon: Brain },
   { href: '/registries', label: 'Registries', icon: Package },
+  { href: '/gateway', label: 'Gateway', icon: Globe },
+  { href: '/ingress', label: 'Ingress', icon: Network },
   { href: '/billing', label: 'Billing', icon: CreditCard },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
@@ -131,6 +140,131 @@ function NavLink({
   )
 }
 
+function OrgSwitcher({
+  collapsed,
+  onNavClick,
+}: {
+  collapsed: boolean
+  onNavClick?: () => void
+}) {
+  const router = useRouter()
+  const { data: orgs } = trpc.organization.list.useQuery()
+  const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null)
+
+  // Load persisted selection on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(LS_KEY)
+    if (stored) setSelectedOrgId(stored)
+  }, [])
+
+  // Auto-select first org if none selected and orgs are loaded
+  useEffect(() => {
+    if (orgs && orgs.length > 0 && !selectedOrgId) {
+      const first = orgs[0].id
+      setSelectedOrgId(first)
+      localStorage.setItem(LS_KEY, first)
+    }
+  }, [orgs, selectedOrgId])
+
+  const selectedOrg = orgs?.find((o) => o.id === selectedOrgId) ?? orgs?.[0]
+  const orgInitials = selectedOrg
+    ? selectedOrg.name
+        .split(/\s+/)
+        .map((w) => w[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    : '??'
+
+  const handleSelect = useCallback(
+    (orgId: string) => {
+      setSelectedOrgId(orgId)
+      localStorage.setItem(LS_KEY, orgId)
+      onNavClick?.()
+      router.push(`/orgs/${orgId}`)
+    },
+    [router, onNavClick],
+  )
+
+  return (
+    <div
+      className={cn(
+        'border-b border-white/[0.06]',
+        collapsed ? 'px-2 py-2' : 'px-2 py-2',
+      )}
+    >
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            className={cn(
+              'flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-white/[0.05]',
+              collapsed && 'justify-center',
+            )}
+          >
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-white/10 to-white/[0.03] ring-1 ring-white/10">
+              <span className="text-[10px] font-semibold text-zinc-300">
+                {orgInitials}
+              </span>
+            </div>
+            {!collapsed && (
+              <>
+                <span className="flex-1 truncate text-left text-[13px] font-medium text-zinc-200">
+                  {selectedOrg?.name ?? 'Select org'}
+                </span>
+                <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-zinc-600" />
+              </>
+            )}
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="start"
+          side={collapsed ? 'right' : 'bottom'}
+          className="w-56 bg-zinc-900 border-zinc-800"
+        >
+          <DropdownMenuLabel className="text-xs font-medium text-zinc-500">
+            Organizations
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator className="bg-zinc-800" />
+          {orgs?.map((org) => {
+            const initials = org.name
+              .split(/\s+/)
+              .map((w) => w[0])
+              .join('')
+              .toUpperCase()
+              .slice(0, 2)
+            const isSelected = org.id === selectedOrg?.id
+            return (
+              <DropdownMenuItem
+                key={org.id}
+                className="text-zinc-300 focus:bg-white/[0.05] focus:text-white"
+              >
+                <button
+                  type="button"
+                  className="flex w-full items-center"
+                  onClick={() => handleSelect(org.id)}
+                >
+                  <div className="mr-2 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-zinc-800 text-[9px] font-semibold text-zinc-400 ring-1 ring-white/[0.06]">
+                    {initials}
+                  </div>
+                  <span className="flex-1 truncate text-left">{org.name}</span>
+                  {isSelected && (
+                    <Check className="ml-2 h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                  )}
+                </button>
+              </DropdownMenuItem>
+            )
+          })}
+          {(!orgs || orgs.length === 0) && (
+            <DropdownMenuLabel className="text-zinc-600 text-xs font-normal">
+              No organizations
+            </DropdownMenuLabel>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  )
+}
+
 function SidebarContent({
   pathname,
   collapsed,
@@ -154,7 +288,7 @@ function SidebarContent({
       {/* Logo */}
       <div
         className={cn(
-          'flex h-14 shrink-0 items-center border-b border-white/[0.06]',
+          'flex h-12 shrink-0 items-center border-b border-white/[0.06]',
           collapsed ? 'justify-center px-2' : 'px-4',
         )}
       >
@@ -169,6 +303,9 @@ function SidebarContent({
           )}
         </Link>
       </div>
+
+      {/* Org switcher */}
+      <OrgSwitcher collapsed={collapsed} onNavClick={onNavClick} />
 
       {/* Navigation */}
       <nav className="flex-1 space-y-0.5 overflow-y-auto p-2">
